@@ -4,6 +4,7 @@
   "package": "net.pcal.splitscreen.common.mixins",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "MinecraftMixin",
     "TitleScreenMixin",
     "WindowMixin"
   ],

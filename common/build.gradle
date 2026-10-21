@@ -13,6 +13,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"    
     compileOnly "org.spongepowered:mixin:${project.spongepowered_version}"
     annotationProcessor "org.spongepowered:mixin:${project.spongepowered_version}:processor"
+    compileOnly "org.lwjgl:lwjgl-sdl:${project.lwjgl_version}"
 }
 
 loom {
