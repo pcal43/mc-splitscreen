@@ -136,11 +136,18 @@ public class Mod {
      * When they press F11, we want to cycle through the screen modes.
      */
     public void onToggleFullscreen(final MinecraftWindow window) {
-        if (this.savedWindowRect == null || modes.get(currentModeIndex).getStyle() == WindowStyle.WINDOWED) {
+        if (modes.get(currentModeIndex).getStyle() == WindowStyle.WINDOWED) {
             // if we're currently in windowed mode, remember the window size for next time
             this.savedWindowRect = window.getWindowBounds();
         }
         currentModeIndex = (currentModeIndex + 1) % modes.size();
+        if (this.savedWindowRect == null && modes.get(currentModeIndex).getStyle() == WindowStyle.WINDOWED) {
+            // launched in a split mode, so there's no windowed size yet; center a half-screen window
+            final Rectangle s = window.getScreenBounds();
+            if (s != null) {
+                this.savedWindowRect = new Rectangle(s.x() + s.width() / 4, s.y() + s.height() / 4, s.width() / 2, s.height() / 2);
+            }
+        }
         saveConfig();
         repositionWindow(window);
     }
@@ -171,8 +178,11 @@ public class Mod {
         final WindowMode mode = modes.get(this.currentModeIndex);
         if (mode == null) {
             syslog().error("Failed to determine mode.");
+        } else if (mode.getStyle() == WindowStyle.SPLITSCREEN && window.getScreenBounds() == null) {
+            // monitor list can be briefly empty, e.g. while a monitor is being plugged in
         } else {
-            window.reposition(mode.getStyle(), mode.getRepositionedBoundsFor(window));
+            final boolean restore = mode.getStyle() == WindowStyle.WINDOWED && this.savedWindowRect != null;
+            window.reposition(mode.getStyle(), restore ? this.savedWindowRect : mode.getRepositionedBoundsFor(window));
         }
     }
 

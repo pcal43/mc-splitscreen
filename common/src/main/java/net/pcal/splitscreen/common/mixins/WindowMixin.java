@@ -153,9 +153,7 @@ public abstract class WindowMixin implements MinecraftWindow {
                 this.y = this.windowedY;
                 this.width = this.windowedWidth;
                 this.height = this.windowedHeight;
-                if (style == WindowStyle.SPLITSCREEN) {
-                    SDLVideo.SDL_SetWindowBordered(this.handle, false);
-                }
+                SDLVideo.SDL_SetWindowBordered(this.handle, style == WindowStyle.WINDOWED);
                 this.setWindowSizeAndPosition(this.x, this.y, this.width, this.height);
                 SDLVideo.SDL_ShowWindow(this.handle);
                 SDLVideo.SDL_RaiseWindow(this.handle);
